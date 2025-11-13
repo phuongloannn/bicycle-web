@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Put } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CustomerResponseDto } from "./dto/response/customer-response.dto";
 import { ApiResponseDto } from "src/common/dto/api-response.dto";
@@ -27,14 +27,14 @@ export class CustomerController {
 
     // ✅ GET ALL CUSTOMERS
     @Get()
-    @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
+    // @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
     @ApiOkResponse({ 
         type: ApiResponseDto, 
         description: 'Get all customers',
         isArray: true
     })
     async findAll(@Req() req): Promise<ApiResponseDto<Customer[]>> {
-        console.log('>>> Current user:', req.user);
+        // console.log('>>> Current user:', req.user);
         var listCustomers = await this.customerService.findAll();
         return {
             statusCode: 200,
@@ -45,7 +45,7 @@ export class CustomerController {
     
     // ✅ GET CUSTOMER BY ID
     @Get(':id')
-    @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
+   // @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
     @ApiOkResponse({ type: ApiResponseDto<CustomerResponseDto> })
     async findOne(@Param('id') id: number): Promise<ApiResponseDto<CustomerResponseDto | null>> {
         var customer = plainToInstance(CustomerResponseDto, await this.customerService.findOne(id), { excludeExtraneousValues: true });
@@ -58,8 +58,8 @@ export class CustomerController {
     }
 
     // ✅ UPDATE
-    @Patch(':id')
-    @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
+    @Put(':id')
+   // @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
     @ApiOkResponse({ type: ApiResponseDto<Customer> })
     async update(@Param('id') id: number, @Body() updateCustomerDto: any): Promise<ApiResponseDto<Customer>> {
         const customer = await this.customerService.update(id, updateCustomerDto);
@@ -72,7 +72,7 @@ export class CustomerController {
 
     // ✅ DELETE
     @Delete(':id')
-    @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
+   // @UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
     @ApiOkResponse({ type: ApiResponseDto<string> })
     async remove(@Param('id') id: number): Promise<ApiResponseDto<string>> {
         await this.customerService.remove(id);

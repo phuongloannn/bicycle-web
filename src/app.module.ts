@@ -1,15 +1,20 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CustomerModule } from './modules/customers/customer.module';
-import { DatabaseModule } from './common/databases/database.module';
+
 import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './common/databases/database.module';
+
 import { AuthModule } from './modules/auth/auth.module';
-import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
+import { CustomerModule } from './modules/customers/customer.module';
 import { ProductsModule } from './modules/products/products.module';
+import { OrdersModule } from './modules/orders/orders.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { OrdersModule } from './modules/orders/orders.module';
+import { CartModule } from './modules/cart/cart.module';
+import { CheckoutModule } from './modules/cart/checkout.module';
+
+import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 
 @Module({
   imports: [
@@ -17,20 +22,22 @@ import { OrdersModule } from './modules/orders/orders.module';
       isGlobal: true,
     }),
     DatabaseModule,
+    AuthModule,
     CustomerModule,
     ProductsModule,
+    OrdersModule,
     UploadModule,
-    AuthModule, 
     DashboardModule,
-    OrdersModule, // ✅ THÊM VÀO ĐÂY
+    CartModule,
+
+    // ✅ Thêm đúng 1 lần
+    CheckoutModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('*'); 
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

@@ -47,12 +47,17 @@ async function bootstrap() {
     origin: true, // 🔥 CHO PHÉP MỌI ORIGIN
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept','X-Requested-With',
-    'Content-Length'],
-      exposedHeaders: ['Content-Disposition'], // 🔥 THÊM
-
-  });
-
+    allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Accept',
+    'X-Requested-With',
+    'Content-Length',
+    'X-Session-ID',        // ✅ THÊM DÒNG NÀY
+    'x-session-id'         // ✅ VÀ DÒNG NÀY (viết thường)
+  ],
+  exposedHeaders: ['Content-Disposition'],
+});
   await app.listen(process.env.PORT ?? 3000);
   
   console.log(`🚀 Application is running on: ${await app.getUrl()}`);

@@ -34,20 +34,22 @@ export class OrdersService {
 
   // ✅ CREATE ORDER
   async create(createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
+        // Tạo transaction để đảm bảo tính toàn vẹn dữ liệu
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
+            // Kiểm tra khách hàng có tồn tại không
       const customer = await this.customerRepository.findOne({
         where: { id: createOrderDto.customerId },
       });
       if (!customer) throw new NotFoundException('Customer not found');
-
+      // Tạo mã đơn hàng duy nhất
       const orderNumber = `ORD-${Date.now()}-${Math.random()
         .toString(36)
         .substr(2, 9)}`;
-
+      // Tạo đơn hàng mới với tổng tiền tạm thời = 0
       const order = this.orderRepository.create({
         orderNumber,
         customerId: createOrderDto.customerId,
@@ -58,12 +60,11 @@ export class OrdersService {
         status: OrderStatus.PENDING,
         isPaid: false,
       });
-
+      // Lưu đơn hàng vào database
       const savedOrder = await queryRunner.manager.save(order);
-
       let totalAmount = 0;
       const orderItems: OrderItem[] = [];
-
+      // Xử lý từng sản phẩm trong đơn hàng
       for (const itemDto of createOrderDto.items) {
         const product = await this.productRepository.findOne({
           where: { id: itemDto.productId },
@@ -72,15 +73,15 @@ export class OrdersService {
           throw new NotFoundException(
             `Product with ID ${itemDto.productId} not found`,
           );
-
+        // Kiểm tra số lượng tồn kho
         if (product.quantity < itemDto.quantity)
           throw new BadRequestException(
             `Insufficient stock for product: ${product.name}`,
           );
-
+        // Cập nhật số lượng tồn kho (trừ đi số lượng đã bán)
         product.quantity -= itemDto.quantity;
         await queryRunner.manager.save(product);
-
+        // Tạo order item (sản phẩm trong đơn hàng)
         const orderItem = this.orderItemRepository.create({
           orderId: savedOrder.id,
           productId: itemDto.productId,
@@ -93,11 +94,12 @@ export class OrdersService {
         orderItems.push(savedItem);
         totalAmount += savedItem.totalPrice;
       }
-
+      // Cập nhật tổng tiền cho đơn hàng
       savedOrder.totalAmount = totalAmount;
       await queryRunner.manager.save(savedOrder);
+      // Commit transaction - xác nhận tất cả thay đổi
       await queryRunner.commitTransaction();
-
+      // Lấy đơn hàng hoàn chỉnh với đầy đủ thông tin quan hệ
       const completeOrder = await this.orderRepository.findOne({
         where: { id: savedOrder.id },
         relations: ['customer', 'items', 'items.product'],
@@ -118,6 +120,7 @@ export class OrdersService {
 
   // ✅ FIND ALL ORDERS
   async findAll(): Promise<OrderResponseDto[]> {
+  // Tìm đơn hàng theo ID với đầy đủ thông tin
     const orders = await this.orderRepository.find({
       relations: ['customer', 'items', 'items.product'],
       order: { createdAt: 'DESC' },
@@ -139,6 +142,7 @@ export class OrdersService {
 
   // ✅ UPDATE ORDER
   async update(id: number, updateOrderDto: UpdateOrderDto): Promise<OrderResponseDto> {
+    // Tìm đơn hàng cần cập nhật
     const order = await this.orderRepository.findOne({
       where: { id },
       relations: ['customer', 'items', 'items.product'],
@@ -195,7 +199,7 @@ export class OrdersService {
     order.status = status;
 
     // cập nhật completedAt hoặc cancelledAt tương ứng
-    if (status === OrderStatus.COMPLETED) order.completedAt = new Date();
+    if (status === 'Paid') order.completedAt = new Date();
     if (status === OrderStatus.CANCELLED) order.cancelledAt = new Date();
 
     const updatedOrder = await this.orderRepository.save(order);

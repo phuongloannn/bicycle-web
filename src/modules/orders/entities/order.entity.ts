@@ -1,14 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { OrderItem } from './order-item.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 
+// ✅ SỬA: Khớp với database enum values
 export enum OrderStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  SHIPPED = 'shipped',
-  DELIVERED = 'delivered',
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed' // ✅ THÊM COMPLETED
+  PENDING = 'Pending',
+  PAID = 'Paid', 
+  SHIPPED = 'Shipped',
+  CANCELLED = 'Canceled'
 }
 
 @Entity('orders')
@@ -16,59 +15,68 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ name: 'orderNumber', unique: true })
   orderNumber: string;
 
-  @Column()
+  @Column({ name: 'customerId' })
   customerId: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ name: 'totalAmount', type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalAmount: number;
 
+  // ✅ SỬA: Khớp với database enum
   @Column({
     type: 'enum',
-    enum: OrderStatus,
-    default: OrderStatus.PENDING
+    enum: ['Pending', 'Paid', 'Shipped', 'Canceled'],
+    default: 'Pending'
   })
-  status: OrderStatus;
+  status: string;
 
-  @Column({ type: 'text' })
+  // ✅ SỬA: Map chính xác column names
+  @Column({ name: 'shipping_address', type: 'text', nullable: true })
   shippingAddress: string;
 
-  @Column({ type: 'text' })
+  @Column({ name: 'billing_address', type: 'text', nullable: true })
   billingAddress: string;
 
-  @Column()
+  @Column({ name: 'payment_method', nullable: true })
   paymentMethod: string;
 
-  @Column({ default: false })
+  @Column({ name: 'is_paid', default: false })
   isPaid: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ name: 'paid_at', type: 'timestamp', nullable: true })
   paidAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ name: 'phone', nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'email', nullable: true })
   email: string;
 
-  @Column({ type: 'text', nullable: true })
-  customerNotes: string; // ✅ THÊM FIELD NÀY
+  @Column({ name: 'customer_notes', type: 'text', nullable: true })
+  customerNotes: string;
 
-  @Column({ type: 'text', nullable: true })
-  cancellationReason: string; // ✅ THÊM FIELD NÀY
+  @Column({ name: 'cancellation_reason', type: 'text', nullable: true })
+  cancellationReason: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  completedAt: Date; // ✅ THÊM FIELD NÀY
+  @Column({ name: 'completed_at', type: 'timestamp', nullable: true })
+  completedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
-  cancelledAt: Date; // ✅ THÊM FIELD NÀY
+  @Column({ name: 'cancelled_at', type: 'timestamp', nullable: true })
+  cancelledAt: Date;
 
-  @CreateDateColumn()
+  // ✅ THÊM: Các columns có trong database
+  @Column({ name: 'order_date', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  orderDate: Date;
+
+  @Column({ name: 'created_by', nullable: true })
+  createdBy: number;
+
+  @Column({ name: 'created_at', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   // Relations
