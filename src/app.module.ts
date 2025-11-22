@@ -13,7 +13,7 @@ import { UploadModule } from './modules/upload/upload.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/cart/checkout.module';
-
+import { PaymentModule } from './modules/payment/payment.module';
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 
 @Module({
@@ -32,6 +32,7 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
 
     // ✅ Thêm đúng 1 lần
     CheckoutModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

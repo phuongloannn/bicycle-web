@@ -34,36 +34,40 @@ export class OrdersService {
 
   // ✅ CREATE ORDER
   async create(createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
-        // Tạo transaction để đảm bảo tính toàn vẹn dữ liệu
+    // Tạo transaction để đảm bảo tính toàn vẹn dữ liệu
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-            // Kiểm tra khách hàng có tồn tại không
+      // Kiểm tra khách hàng có tồn tại không
       const customer = await this.customerRepository.findOne({
         where: { id: createOrderDto.customerId },
       });
       if (!customer) throw new NotFoundException('Customer not found');
+      
       // Tạo mã đơn hàng duy nhất
       const orderNumber = `ORD-${Date.now()}-${Math.random()
         .toString(36)
         .substr(2, 9)}`;
-      // Tạo đơn hàng mới với tổng tiền tạm thời = 0
+      
+      // Tạo đơn hàng mới với tổng tiền tạm thời = '0.00' (entity uses string for decimal)
       const order = this.orderRepository.create({
         orderNumber,
         customerId: createOrderDto.customerId,
-        totalAmount: 0,
+        totalAmount: '0.00',
         shippingAddress: createOrderDto.shippingAddress,
         billingAddress: createOrderDto.billingAddress,
         paymentMethod: createOrderDto.paymentMethod,
-        status: OrderStatus.PENDING,
+        status: OrderStatus.Pending,
         isPaid: false,
       });
+      
       // Lưu đơn hàng vào database
       const savedOrder = await queryRunner.manager.save(order);
       let totalAmount = 0;
       const orderItems: OrderItem[] = [];
+      
       // Xử lý từng sản phẩm trong đơn hàng
       for (const itemDto of createOrderDto.items) {
         const product = await this.productRepository.findOne({
@@ -73,32 +77,38 @@ export class OrdersService {
           throw new NotFoundException(
             `Product with ID ${itemDto.productId} not found`,
           );
+        
         // Kiểm tra số lượng tồn kho
         if (product.quantity < itemDto.quantity)
           throw new BadRequestException(
             `Insufficient stock for product: ${product.name}`,
           );
+        
         // Cập nhật số lượng tồn kho (trừ đi số lượng đã bán)
         product.quantity -= itemDto.quantity;
         await queryRunner.manager.save(product);
+        
         // Tạo order item (sản phẩm trong đơn hàng)
         const orderItem = this.orderItemRepository.create({
           orderId: savedOrder.id,
           productId: itemDto.productId,
           quantity: itemDto.quantity,
-          unitPrice: itemDto.unitPrice,
-          totalPrice: itemDto.quantity * itemDto.unitPrice,
+          unitPrice: itemDto.unitPrice.toString(),
+          totalPrice: (itemDto.quantity * itemDto.unitPrice).toFixed(2).toString(),
         });
 
         const savedItem = await queryRunner.manager.save(orderItem);
         orderItems.push(savedItem);
-        totalAmount += savedItem.totalPrice;
+        totalAmount += Number(savedItem.totalPrice);
       }
-      // Cập nhật tổng tiền cho đơn hàng
-      savedOrder.totalAmount = totalAmount;
+      
+      // Cập nhật tổng tiền cho đơn hàng (entity expects string for decimal)
+      savedOrder.totalAmount = totalAmount.toFixed(2).toString();
       await queryRunner.manager.save(savedOrder);
+      
       // Commit transaction - xác nhận tất cả thay đổi
       await queryRunner.commitTransaction();
+      
       // Lấy đơn hàng hoàn chỉnh với đầy đủ thông tin quan hệ
       const completeOrder = await this.orderRepository.findOne({
         where: { id: savedOrder.id },
@@ -120,7 +130,7 @@ export class OrdersService {
 
   // ✅ FIND ALL ORDERS
   async findAll(): Promise<OrderResponseDto[]> {
-  // Tìm đơn hàng theo ID với đầy đủ thông tin
+    // Tìm đơn hàng theo ID với đầy đủ thông tin
     const orders = await this.orderRepository.find({
       relations: ['customer', 'items', 'items.product'],
       order: { createdAt: 'DESC' },
@@ -199,8 +209,8 @@ export class OrdersService {
     order.status = status;
 
     // cập nhật completedAt hoặc cancelledAt tương ứng
-    if (status === 'Paid') order.completedAt = new Date();
-    if (status === OrderStatus.CANCELLED) order.cancelledAt = new Date();
+    if (status === OrderStatus.Paid) order.completedAt = new Date();
+    if (status === OrderStatus.Canceled) order.cancelledAt = new Date();
 
     const updatedOrder = await this.orderRepository.save(order);
     return this.mapToOrderResponseDto(updatedOrder);
@@ -221,7 +231,7 @@ export class OrdersService {
     return this.mapToOrderResponseDto(updatedOrder);
   }
 
-  // ✅ CHUẨN HÓA MAPPING - SỬA LỖI DATE
+  // ✅ CHUẨN HÓA MAPPING - ĐÃ SỬA PRODUCT IMAGE
   private mapToOrderResponseDto(order: any): OrderResponseDto {
     const orderResponse = new OrderResponseDto();
     
@@ -231,7 +241,7 @@ export class OrdersService {
     orderResponse.customerName = order.customer?.name || 'Unknown Customer';
     orderResponse.customerEmail = order.customer?.email || '';
     orderResponse.customerPhone = order.customer?.phone || '';
-    orderResponse.totalAmount = order.totalAmount;
+    orderResponse.totalAmount = order.totalAmount; // ✅ BACKEND ĐÃ TÍNH ĐÚNG
     orderResponse.status = order.status;
     orderResponse.shippingAddress = order.shippingAddress;
     orderResponse.billingAddress = order.billingAddress;
@@ -246,14 +256,17 @@ export class OrdersService {
     orderResponse.customerNotes = order.customerNotes || '';
     orderResponse.cancellationReason = order.cancellationReason || '';
 
-    // Map order items
+    // ✅ SỬA QUAN TRỌNG: MAP ORDER ITEMS VỚI ẢNH TỪ PRODUCT
     orderResponse.items = order.items?.map((item) => {
       const itemDto = new OrderItemResponseDto();
       itemDto.id = item.id;
       itemDto.productId = item.productId;
       itemDto.productName = item.product?.name || 'Unknown Product';
-      // Sửa lỗi image field - kiểm tra cả imageUrl và image
-      itemDto.productImage = (item.product as any)?.image || (item.product as any)?.imageUrl || undefined;
+      
+      // ✅ QUAN TRỌNG: LẤY ẢNH TỪ PRODUCT - KIỂM TRA CÁC FIELD CÓ THỂ CÓ
+      const product = item.product as any;
+      itemDto.productImage = product?.imageUrl || product?.image || product?.photo || undefined;
+      
       itemDto.quantity = item.quantity;
       itemDto.unitPrice = item.unitPrice;
       itemDto.totalPrice = item.totalPrice;

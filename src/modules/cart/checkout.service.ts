@@ -1,18 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-// ❌ XÓA: import { GuestCartService } from './guest-cart.service';
 import { Customer } from '../customers/entities/customer.entity';
 import { Order, OrderStatus } from '../orders/entities/order.entity';
 import { OrderItem } from '../orders/entities/order-item.entity';
 import { Product } from '../products/entities/product.entity';
-import { Cart } from './entities/cart.entity'; // ✅ THÊM
+import { Cart } from './entities/cart.entity';
 
 @Injectable()
 export class CheckoutService {
   constructor(
-    // ❌ XÓA: private guestCartService: GuestCartService,
-    @InjectRepository(Cart) // ✅ THÊM: Inject Cart repository
+    @InjectRepository(Cart)
     private cartRepository: Repository<Cart>,
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
@@ -25,26 +23,24 @@ export class CheckoutService {
     private dataSource: DataSource,
   ) {}
 
-  // ✅ Checkout cho khách vãng lai
   async guestCheckout(sessionId: string, customerInfo: any): Promise<any> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      // 1. Lấy giỏ hàng TRỰC TIẾP từ database (thay vì qua GuestCartService)
+      // 1. Lấy giỏ hàng TRỰC TIẾP từ database
       const cartItems = await this.cartRepository.find({
         where: { sessionId },
         relations: ['product']
       });
 
       console.log('🔍 [CheckoutService] Cart items found:', cartItems.length);
-      
+
       if (!cartItems || cartItems.length === 0) {
         throw new NotFoundException('Giỏ hàng trống');
       }
 
-      // Xử lý cart items thành format cần thiết
       const processedCartItems = cartItems.map(item => {
         if (!item.product) {
           throw new NotFoundException(`Product not found for cart item ${item.id}`);
@@ -76,22 +72,22 @@ export class CheckoutService {
           phone: customerInfo.phone,
           address: customerInfo.shippingAddress
         });
-        customer = await queryRunner.manager.save(customer);
+        customer = await queryRunner.manager.save(Customer, customer);
       }
 
       // 4. Tạo order number
-      const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      const totalAmount = processedCartItems.reduce((sum, item) => sum + item.total, 0);
+      const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+      const totalAmount = processedCartItems.reduce((sum, item) => sum + item.total, 0).toString();
 
       // 5. Tạo order
       const order = this.orderRepository.create({
-        orderNumber,
+        orderNumber: orderNumber,
         customerId: customer.id,
-        totalAmount,
-        shippingAddress: customerInfo.shippingAddress,
-        billingAddress: customerInfo.billingAddress || customerInfo.shippingAddress,
+        totalAmount: totalAmount,
+        shippingAddress: customerInfo.shippingAddress || '',
+        billingAddress: customerInfo.billingAddress || customerInfo.shippingAddress || '',
         paymentMethod: customerInfo.paymentMethod || 'COD',
-        status: OrderStatus.PENDING,
+        status: OrderStatus.Pending,
         isPaid: false,
         phone: customerInfo.phone,
         email: customerInfo.email,
@@ -99,11 +95,11 @@ export class CheckoutService {
         orderDate: new Date(),
       });
 
-      const savedOrder = await queryRunner.manager.save(order);
+      const savedOrder = await queryRunner.manager.save(Order, order);
 
       // 6. Tạo order items và cập nhật tồn kho
       for (const item of processedCartItems) {
-        const product = await this.productRepository.findOne({
+        const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.productId }
         });
 
@@ -115,24 +111,22 @@ export class CheckoutService {
           throw new BadRequestException(`Sản phẩm "${product.name}" không đủ tồn kho`);
         }
 
-        // Trừ tồn kho
         product.quantity -= item.quantity;
-        await queryRunner.manager.save(product);
+        await queryRunner.manager.save(Product, product);
 
-        // Tạo order item
         const orderItem = this.orderItemRepository.create({
           orderId: savedOrder.id,
           productId: item.productId,
           quantity: item.quantity,
-          unitPrice: item.price,
-          totalPrice: item.total,
+          unitPrice: item.price.toString(),
+          totalPrice: item.total.toFixed(2).toString(),
         });
 
         await queryRunner.manager.save(orderItem);
       }
 
-      // 7. Xóa giỏ hàng TRỰC TIẾP (thay vì qua GuestCartService)
-      await this.cartRepository.delete({ sessionId });
+      // 7. Xóa giỏ hàng TRỰC TIẾP bằng queryRunner
+      await queryRunner.manager.delete(Cart, { sessionId });
 
       // 8. Commit transaction
       await queryRunner.commitTransaction();
@@ -158,9 +152,7 @@ export class CheckoutService {
     }
   }
 
-  // ✅ Checkout cho user đã đăng nhập (nếu cần)
   async userCheckout(userId: number, shippingInfo: any): Promise<any> {
-    // Logic cho user đã đăng nhập
     return { message: 'User checkout - to be implemented' };
   }
 }

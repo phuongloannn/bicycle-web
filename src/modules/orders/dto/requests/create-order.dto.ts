@@ -15,27 +15,35 @@ export class CreateOrderItemDto {
   @IsInt()
   @Min(1, { message: 'Product ID must be greater than 0' })
   @IsNotEmpty()
-  @Transform(({ value }) => parseInt(value)) // ✅ CHUYỂN ĐỔI SANG NUMBER
+  @Transform(({ value }) => parseInt(value))
   productId: number;
+
+
 
   @IsInt()
   @Min(1, { message: 'Quantity must be at least 1' })
   @IsNotEmpty()
-  @Transform(({ value }) => parseInt(value)) // ✅ CHUYỂN ĐỔI SANG NUMBER
+  @Transform(({ value }) => parseInt(value))
   quantity: number;
 
   @IsNumber()
   @Min(0, { message: 'Unit price must be non-negative' })
   @IsNotEmpty()
-  @Transform(({ value }) => parseFloat(value)) // ✅ CHUYỂN ĐỔI SANG NUMBER
+  @Transform(({ value }) => parseFloat(value))
   unitPrice: number;
+
+  @IsNumber()
+  @Min(0, { message: 'Total price must be non-negative' })
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
+  totalPrice?: number; // ✅ THÊM FIELD NÀY
 }
 
 export class CreateOrderDto {
   @IsInt()
   @Min(1, { message: 'Customer ID must be greater than 0' })
   @IsNotEmpty()
-  @Transform(({ value }) => parseInt(value)) // ✅ CHUYỂN ĐỔI SANG NUMBER
+  @Transform(({ value }) => parseInt(value))
   customerId: number;
 
   @IsArray()
@@ -45,14 +53,22 @@ export class CreateOrderDto {
   items: CreateOrderItemDto[];
 
   @IsString()
-  @IsOptional()
-  shippingAddress?: string;
+  @IsNotEmpty()
+  shippingAddress: string;
 
   @IsString()
   @IsOptional()
   billingAddress?: string;
 
+  @IsNumber()
+  @IsOptional()
+  totalAmount?: number;
+
   @IsString()
   @IsOptional()
   paymentMethod?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 }
