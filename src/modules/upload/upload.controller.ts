@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
-import type { Request } from 'express'; // 🔥 THÊM 'type'
+import type { Request } from 'express';
 
 @Controller('upload')
 export class UploadController {
@@ -72,6 +72,45 @@ export class UploadController {
     };
 
     this.logger.log('🎉 UPLOAD SUCCESS:', result);
+    
+    return result;
+  }
+
+  // 🔥 THÊM ENDPOINT MỚI CHO ACCESSORIES - ĐÃ SỬA
+  @Post('accessory-image')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadAccessoryImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
+    this.logger.log('=== 🎯 ACCESSORY IMAGE UPLOAD ===');
+    
+    // Debug log
+    this.logger.log('📥 Accessory upload request received');
+    this.logger.log(`  Content-Type: ${req.headers['content-type']}`);
+    this.logger.log(`  Origin: ${req.headers['origin']}`);
+
+    if (!file) {
+      this.logger.error('❌ NO FILE RECEIVED FOR ACCESSORY');
+      throw new BadRequestException('No file received for accessory');
+    }
+
+    this.logger.log('✅ ACCESSORY FILE RECEIVED:', {
+      originalName: file.originalname,
+      size: file.size,
+      mimetype: file.mimetype,
+      filename: file.filename // 🔥 THÊM FILENAME THỰC TẾ
+    });
+
+    // 🔥 QUAN TRỌNG: Dùng file.filename thực tế từ multer
+    const result = {
+      filename: file.filename, // 🔥 DÙNG FILENAME THỰC TẾ
+      originalName: file.originalname,
+      size: file.size,
+      url: `${process.env.APP_URL || 'http://localhost:3000'}/uploads/products/${file.filename}`, // 🔥 DÙNG FILENAME THỰC TẾ
+    };
+
+    this.logger.log('🎉 ACCESSORY UPLOAD SUCCESS:', result);
     
     return result;
   }

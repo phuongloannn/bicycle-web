@@ -13,7 +13,12 @@ import { UploadService } from './upload.service';
         filename: (req, file, callback) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
-          callback(null, `product-${uniqueSuffix}${ext}`);
+          
+          // 🔥 XÁC ĐỊNH LOẠI UPLOAD (PRODUCT HAY ACCESSORY)
+          const isAccessoryUpload = req.url.includes('accessory-image');
+          const prefix = isAccessoryUpload ? 'accessory' : 'product';
+          
+          callback(null, `${prefix}-${uniqueSuffix}${ext}`);
         },
       }),
       fileFilter: (req, file, callback) => {

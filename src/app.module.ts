@@ -13,6 +13,7 @@ import { UploadModule } from './modules/upload/upload.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/cart/checkout.module';
+import { AccessoriesModule } from './modules/accessories/accessories.module'; // 🔥 THÊM IMPORT
 
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 
@@ -29,9 +30,8 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
     UploadModule,
     DashboardModule,
     CartModule,
-
-    // ✅ Thêm đúng 1 lần
     CheckoutModule,
+    AccessoriesModule, // 🔥 THÊM VÀO ĐÂY - ĐÚNG TÊN
   ],
   controllers: [AppController],
   providers: [AppService],
