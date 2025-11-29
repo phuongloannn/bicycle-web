@@ -56,24 +56,44 @@ export class CheckoutService {
       });
 
       // 2. Validate thông tin khách hàng
-      if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-        throw new BadRequestException('Vui lòng điền đầy đủ thông tin khách hàng');
-      }
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      throw new BadRequestException('Vui lòng điền đầy đủ thông tin khách hàng');
+    }
 
-      // 3. Tạo hoặc tìm customer
-      let customer = await this.customerRepository.findOne({
-        where: { email: customerInfo.email }
+    console.log('🔍 [CheckoutService] Customer info:', {
+      name: customerInfo.name,
+      email: customerInfo.email,
+      phone: customerInfo.phone
+    });
+
+    // 3. Tạo hoặc tìm customer - THÊM DEBUG
+    let customer = await this.customerRepository.findOne({
+      where: { email: customerInfo.email }
+    });
+
+    console.log('🔍 [CheckoutService] Existing customer found:', customer);
+
+    if (!customer) {
+      console.log('🔍 [CheckoutService] Creating new customer...');
+      customer = this.customerRepository.create({
+        name: customerInfo.name,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+        address: customerInfo.shippingAddress
       });
+      
+      console.log('🔍 [CheckoutService] Customer before save:', customer);
+      customer = await this.customerRepository.save(customer); // DÙNG repository thay vì queryRunner
+      console.log('🔍 [CheckoutService] Customer after save:', customer);
+    }
 
-      if (!customer) {
-        customer = this.customerRepository.create({
-          name: customerInfo.name,
-          email: customerInfo.email,
-          phone: customerInfo.phone,
-          address: customerInfo.shippingAddress
-        });
-        customer = await queryRunner.manager.save(Customer, customer);
-      }
+    // KIỂM TRA customer.id
+    if (!customer?.id) {
+      throw new BadRequestException('Không thể tạo thông tin khách hàng');
+    }
+
+    console.log('🔍 [CheckoutService] Using customer ID:', customer.id);
+
 
       // 4. Tạo order number
       const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -97,7 +117,7 @@ export class CheckoutService {
 
       const savedOrder = await queryRunner.manager.save(Order, order);
 
-      // 6. Tạo order items và cập nhật tồn kho
+      // 6. Tạo order items và cập nhật tồn kho - FIXED
       for (const item of processedCartItems) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.productId }
@@ -114,9 +134,11 @@ export class CheckoutService {
         product.quantity -= item.quantity;
         await queryRunner.manager.save(Product, product);
 
+        // FIX: Sử dụng itemId và type thay vì productId
         const orderItem = this.orderItemRepository.create({
           orderId: savedOrder.id,
-          productId: item.productId,
+          itemId: item.productId, // Đổi từ productId sang itemId
+          type: 'product', // Thêm trường type
           quantity: item.quantity,
           unitPrice: item.price.toString(),
           totalPrice: item.total.toFixed(2).toString(),

@@ -17,6 +17,8 @@ import { AccessoriesModule } from './modules/accessories/accessories.module';
 import { PaymentModule } from './modules/payment/payment.module';
 
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
+import { ProductSpecificationsModule } from './modules/product-specifications/product-specifications.module';
+
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
     CheckoutModule,
     AccessoriesModule,
     PaymentModule,
+    ProductSpecificationsModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],

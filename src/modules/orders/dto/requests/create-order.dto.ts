@@ -6,19 +6,21 @@ import {
   IsOptional, 
   ValidateNested, 
   Min, 
-  IsNotEmpty 
+  IsNotEmpty, 
+  IsIn 
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Transform } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 
 export class CreateOrderItemDto {
   @IsInt()
-  @Min(1, { message: 'Product ID must be greater than 0' })
+  @Min(1, { message: 'Item ID must be greater than 0' })
   @IsNotEmpty()
   @Transform(({ value }) => parseInt(value))
-  productId: number;
+  itemId: number; // ✅ đổi từ productId sang itemId để hỗ trợ cả product và accessory
 
-
+  @IsIn(['product', 'accessory'], { message: 'Type must be product or accessory' })
+  @IsNotEmpty()
+  type: 'product' | 'accessory'; // ✅ xác định loại: product hoặc accessory
 
   @IsInt()
   @Min(1, { message: 'Quantity must be at least 1' })
@@ -36,7 +38,7 @@ export class CreateOrderItemDto {
   @Min(0, { message: 'Total price must be non-negative' })
   @IsOptional()
   @Transform(({ value }) => parseFloat(value))
-  totalPrice?: number; // ✅ THÊM FIELD NÀY
+  totalPrice?: number; // ✅ optional, có thể tính tự động
 }
 
 export class CreateOrderDto {

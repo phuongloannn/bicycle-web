@@ -29,6 +29,36 @@ export class AccessoriesController {
     return this.accessoriesService.findAll();
   }
 
+  // 🔥 NEW: GET COMPATIBLE ACCESSORIES BY BIKE TYPE
+  @Get('compatible/:bikeType')
+  findCompatibleByBikeType(@Param('bikeType') bikeType: string) {
+    return this.accessoriesService.findCompatibleByBikeTypeName(bikeType);
+  }
+
+  // 🔥 NEW: GET COMPATIBLE ACCESSORIES BY PRODUCT ID
+  @Get('compatible-with-product/:productId')
+  async findCompatibleByProductId(@Param('productId') productId: string) {
+    return this.accessoriesService.findCompatibleByProductId(+productId);
+  }
+
+  // 🔥 NEW: GET COMPATIBLE ACCESSORIES BY BIKE TYPE ID (number)
+  @Get('compatible/bike-type-id/:bikeTypeId')
+  findCompatibleByBikeTypeId(@Param('bikeTypeId') bikeTypeId: string) {
+    return this.accessoriesService.findCompatibleByBikeType(+bikeTypeId);
+  }
+
+  // 🔥 NEW: GET BIKE TYPES MAPPING
+  @Get('bike-types/mapping')
+  getBikeTypesMapping() {
+    return this.accessoriesService.getBikeTypesMapping();
+  }
+
+  // 🔥 NEW: GET ALL PRODUCTS WITH COMPATIBLE ACCESSORIES
+  @Get('products/compatibility')
+  getProductsWithCompatibility() {
+    return this.accessoriesService.getProductsWithCompatibility();
+  }
+
   // SEARCH ACCESSORIES
   @Get('search')
   search(@Query('q') query: string) {
@@ -59,14 +89,13 @@ export class AccessoriesController {
     return this.accessoriesService.remove(+id);
   }
 
-  // 🔥 UPLOAD ACCESSORY IMAGE - FIXED: LUÔN LƯU VÀO ACCESSORIES
+  // 🔥 UPLOAD ACCESSORY IMAGE
   @Post('upload-image')
   @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
       destination: (req, file, cb) => {
         const uploadDir = './uploads/accessories';
         
-        // 🔥 TẠO THƯ MỤC NẾU CHƯA TỒN TẠI
         if (!fs.existsSync(uploadDir)) {
           fs.mkdirSync(uploadDir, { recursive: true });
           console.log('📁 Created accessories directory:', uploadDir);
@@ -77,7 +106,6 @@ export class AccessoriesController {
       },
       filename: (req, file, cb) => {
         try {
-          // Tạo tên file unique
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           const ext = path.extname(file.originalname);
           const filename = `accessory-${uniqueSuffix}${ext}`;
@@ -114,11 +142,10 @@ export class AccessoriesController {
       filename: file.filename,
       size: file.size,
       mimetype: file.mimetype,
-      path: file.path, // 🔥 KIỂM TRA ĐƯỜNG DẪN THẬT
+      path: file.path,
       destination: file.destination
     });
 
-    // 🔥 FIX: LUÔN TRẢ VỀ ACCESSORIES URL
     const result = {
       filename: file.filename,
       originalName: file.originalname,

@@ -10,7 +10,7 @@ export class CustomerService {
     private readonly customerRepository: Repository<Customer>,
   ) {}
 
-  // --- 🧩 Hàm tạo dữ liệu mẫu ---
+  // --- 🧩 Seed dữ liệu mẫu ---
   async createSampleCustomers(): Promise<void> {
     const customers = [
       {
@@ -27,41 +27,48 @@ export class CustomerService {
       },
     ];
 
-    for (const customerData of customers) {
-      const existing = await this.customerRepository.findOne({
-        where: { email: customerData.email },
-      });
+    for (const data of customers) {
+      const exists = await this.customerRepository.findOne({ where: { email: data.email } });
 
-      if (!existing) {
-        const customer = this.customerRepository.create(customerData);
-        await this.customerRepository.save(customer);
+      if (!exists) {
+        await this.customerRepository.save(this.customerRepository.create(data));
       }
     }
   }
 
-  // --- ✅ TẠO KHÁCH HÀNG MỚI ---
+  // --- ✅ CREATE CUSTOMER ---
   async create(createCustomerDto: any): Promise<Customer> {
-    const existingCustomer = await this.customerRepository.findOne({
+    const exists = await this.customerRepository.findOne({
       where: { email: createCustomerDto.email },
     });
 
-    if (existingCustomer) {
+    if (exists) {
       throw new BadRequestException('Email already exists');
     }
 
     const customer = this.customerRepository.create(createCustomerDto as Customer);
-    const savedCustomer = await this.customerRepository.save(customer);
-    return savedCustomer;
+    return await this.customerRepository.save(customer);
   }
 
-  // --- ✅ Lấy danh sách tất cả khách hàng ---
+  // --- ✅ GET ALL - FIXED COMPLETELY ---
   async findAll(): Promise<Customer[]> {
-    return await this.customerRepository.find();
+    try {
+      const customers = await this.customerRepository.find({
+        relations: ['orders'],
+      }) as Customer[];
+      return customers;
+    } catch (error) {
+      console.error('Error in findAll:', error);
+      return [];
+    }
   }
 
-  // --- ✅ Lấy thông tin một khách hàng theo ID ---
+  // --- ✅ GET ONE ---
   async findOne(id: number): Promise<Customer> {
-    const customer = await this.customerRepository.findOne({ where: { id } });
+    const customer = await this.customerRepository.findOne({ 
+      where: { id },
+      relations: ['orders'],
+    });
 
     if (!customer) {
       throw new NotFoundException(`Customer with ID ${id} not found`);
@@ -70,33 +77,39 @@ export class CustomerService {
     return customer;
   }
 
-  // --- ✅ CẬP NHẬT THÔNG TIN KHÁCH HÀNG ---
+  // --- 🔍 FIND BY EMAIL ---
+  async findByEmail(email: string): Promise<Customer | null> {
+    return await this.customerRepository.findOne({
+      where: { email },
+      relations: ['orders'],
+    });
+  }
+
+  // --- ✅ UPDATE / PATCH CUSTOMER ---
   async update(id: number, updateCustomerDto: any): Promise<Customer> {
     const customer = await this.findOne(id);
 
-    // Kiểm tra email mới có trùng với khách hàng khác không
+    // Nếu đang PATCH, FE có thể chỉ gửi name/phone/address
+    // Chỉ validate email khi FE gửi email
     if (updateCustomerDto.email && updateCustomerDto.email !== customer.email) {
-      const existingCustomer = await this.customerRepository.findOne({
+      const exists = await this.customerRepository.findOne({
         where: { email: updateCustomerDto.email },
       });
 
-      if (existingCustomer) {
+      if (exists) {
         throw new BadRequestException('Email already exists');
       }
     }
 
+    // Gộp dữ liệu mới vào object hiện tại
     Object.assign(customer, updateCustomerDto);
+
     return await this.customerRepository.save(customer);
   }
 
-  // --- ✅ XÓA KHÁCH HÀNG ---
+  // --- ❌ DELETE ---
   async remove(id: number): Promise<void> {
     const customer = await this.findOne(id);
     await this.customerRepository.remove(customer);
-  }
-
-  // --- 🔍 TÌM KIẾM KHÁCH HÀNG THEO EMAIL ---
-  async findByEmail(email: string): Promise<Customer | null> {
-    return await this.customerRepository.findOne({ where: { email } });
   }
 }

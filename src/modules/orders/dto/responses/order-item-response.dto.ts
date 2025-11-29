@@ -5,7 +5,10 @@ export class OrderItemResponseDto {
   id: number;
 
   @ApiProperty()
-  productId: number;
+  itemId: number; // Đổi từ productId sang itemId
+
+  @ApiProperty({ enum: ['product', 'accessory'] })
+  type: 'product' | 'accessory'; // Thêm trường type
 
   @ApiProperty()
   productName: string;
@@ -14,11 +17,11 @@ export class OrderItemResponseDto {
   quantity: number;
 
   @ApiProperty()
-  unitPrice: number;
+  unitPrice: number; // Đổi từ string sang number
 
   @ApiProperty()
-  totalPrice: number;
+  totalPrice: number; // Đổi từ string sang number
 
   @ApiProperty({ required: false })
-  productImage?: string; // Phải là optional với ?
+  productImage?: string;
 }

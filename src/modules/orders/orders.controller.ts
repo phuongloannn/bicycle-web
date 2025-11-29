@@ -6,8 +6,7 @@ import {
   Patch, 
   Param, 
   Delete, 
-  ParseIntPipe,
-  Query 
+  ParseIntPipe
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/requests/create-order.dto';
@@ -52,5 +51,24 @@ export class OrdersController {
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.ordersService.remove(id);
+  }
+
+  // -----------------------------
+  // Lấy 10 đơn hàng gần nhất
+  @Get('recent-activities')
+  async getRecentOrders() {
+    // Truy vấn từ service
+    const orders = await this.ordersService.getRecentOrders();
+
+    // Map dữ liệu thành format frontend cần
+    return orders.map(order => ({
+      id: order.id,
+      action: `Order #${order.orderNumber} (${order.status})`,
+      user: order.customer?.name || 'Guest', // Sửa: lấy từ customer relation
+      email: order.customer?.email || '', // Thêm email nếu cần
+      time: order.createdAt, // Sửa: createdAt thay vì created_at
+      type: 'order',
+      amount: order.totalAmount, // Thêm amount nếu cần
+    }));
   }
 }

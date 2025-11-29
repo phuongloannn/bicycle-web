@@ -28,4 +28,5 @@ export class Product {
 
   @UpdateDateColumn({ name: 'updatedAt' })  // ✅ Đúng: database có updatedAt
   updatedAt: Date;
+  orderItems: any;
 }
