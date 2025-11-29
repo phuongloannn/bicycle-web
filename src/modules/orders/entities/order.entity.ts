@@ -1,13 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { OrderItem } from './order-item.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 
-// ✅ SỬA: Khớp với database enum values
 export enum OrderStatus {
-  PENDING = 'Pending',
-  PAID = 'Paid', 
-  SHIPPED = 'Shipped',
-  CANCELLED = 'Canceled'
+  Pending = 'Pending',
+  Paid = 'Paid',
+  Shipped = 'Shipped',
+  Canceled = 'Canceled',
 }
 
 @Entity('orders')
@@ -15,24 +21,22 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'orderNumber', unique: true })
+  @Column({ name: 'order_number', unique: true })
   orderNumber: string;
 
-  @Column({ name: 'customerId' })
+  @Column({ name: 'customer_id' })
   customerId: number;
 
-  @Column({ name: 'totalAmount', type: 'decimal', precision: 10, scale: 2, default: 0 })
-  totalAmount: number;
+  @Column({ name: 'total_amount', type: 'decimal', precision: 10, scale: 2, default: 0 })
+  totalAmount: string; // ⚠️ TypeORM trả về string cho decimal
 
-  // ✅ SỬA: Khớp với database enum
   @Column({
     type: 'enum',
-    enum: ['Pending', 'Paid', 'Shipped', 'Canceled'],
-    default: 'Pending'
+    enum: OrderStatus,
+    default: OrderStatus.Pending,
   })
-  status: string;
+  status: OrderStatus;
 
-  // ✅ SỬA: Map chính xác column names
   @Column({ name: 'shipping_address', type: 'text', nullable: true })
   shippingAddress: string;
 
@@ -66,7 +70,6 @@ export class Order {
   @Column({ name: 'cancelled_at', type: 'timestamp', nullable: true })
   cancelledAt: Date;
 
-  // ✅ THÊM: Các columns có trong database
   @Column({ name: 'order_date', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   orderDate: Date;
 
@@ -79,11 +82,10 @@ export class Order {
   @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  // Relations
-  @ManyToOne(() => Customer, customer => customer.orders)
-  @JoinColumn({ name: 'customerId' })
+  @ManyToOne(() => Customer, (customer) => customer.orders)
+  @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
   items: OrderItem[];
 }

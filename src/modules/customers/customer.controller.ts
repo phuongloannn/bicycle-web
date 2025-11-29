@@ -57,18 +57,27 @@ export class CustomerController {
         }
     }
 
-     // ✅ GET CUSTOMER BY ID
+     // ✅ GET CUSTOMER BY EMAIL
     @Get('bymail/:email')
-    //@UseGuards(JwtAuthGuard) // ✅ CHỈ dùng JWT guard
     @ApiOkResponse({ type: ApiResponseDto<CustomerResponseDto> })
     async findByEmail(@Param('email') email: string): Promise<ApiResponseDto<CustomerResponseDto | null>> {
-        var customer = plainToInstance(CustomerResponseDto, await this.customerService.findByEmail(email), { excludeExtraneousValues: true });
-        
+      const customer = await this.customerService.findByEmail(email);
+
+      if (!customer) {
         return {
-            statusCode: 200,
-            message: 'Successfully',
-            data: customer
-        }
+          statusCode: 404,
+          message: 'Customer not found',
+          data: null
+        };
+      }
+
+      const customerDto = plainToInstance(CustomerResponseDto, customer, { excludeExtraneousValues: true });
+
+      return {
+        statusCode: 200,
+        message: 'Successfully',
+        data: customerDto
+      };
     }
 
     // ✅ UPDATE
