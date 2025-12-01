@@ -1,15 +1,27 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductsService } from './products.service';
-import { ProductsController } from './products.controller';
-import { Product } from './entities/product.entity';
-// import { UploadModule } from '../upload/upload.module'; // 🔥 TẠM COMMENT
 
+import { Product } from './entities/product.entity';
+import { ProductSpecification } from './product-specifications.entity';
+
+import { ProductsController } from './products.controller';
+import { ProductSpecificationsController } from './product-specifications.controller';
+
+import { ProductsService } from './products.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product])],
-  controllers: [ProductsController],
-  providers: [ProductsService],
-  exports: [ProductsService],
+  imports: [
+    TypeOrmModule.forFeature([
+      Product,
+      ProductSpecification   // ⭐ Quan trọng
+    ]),
+  ],
+  controllers: [
+    ProductsController,
+    ProductSpecificationsController,
+  ],
+  providers: [
+    ProductsService
+  ],
 })
 export class ProductsModule {}

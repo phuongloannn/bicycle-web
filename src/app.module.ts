@@ -14,23 +14,21 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/cart/checkout.module';
 import { PaymentModule } from './modules/payment/payment.module';
+
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+
     AuthModule,
     CustomerModule,
-    ProductsModule,
+    ProductsModule,   // ⭐ ProductSpecifications nằm trong module này
     OrdersModule,
     UploadModule,
     DashboardModule,
     CartModule,
-
-    // ✅ Thêm đúng 1 lần
     CheckoutModule,
     PaymentModule,
   ],
