@@ -22,6 +22,7 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
 import { ProductSpecificationsModule } from './modules/product-specifications/product-specifications.module';
 
 import { ChatbotModule } from './chatbot/chatbot.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     ChatbotModule,
     CategoriesModule,
     InventoryModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
