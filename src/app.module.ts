@@ -15,11 +15,14 @@ import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/cart/checkout.module';
 import { AccessoriesModule } from './modules/accessories/accessories.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
 
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { ProductSpecificationsModule } from './modules/product-specifications/product-specifications.module';
 
 import { ChatbotModule } from './chatbot/chatbot.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -39,7 +42,9 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     PaymentModule,
     ProductSpecificationsModule,
     ChatbotModule,
-
+    CategoriesModule,
+    InventoryModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
