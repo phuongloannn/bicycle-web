@@ -19,6 +19,7 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { ProductSpecificationsModule } from './modules/product-specifications/product-specifications.module';
 
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ProductSpecificationsModule } from './modules/product-specifications/pr
     AccessoriesModule,
     PaymentModule,
     ProductSpecificationsModule,
+    ChatbotModule,
 
   ],
   controllers: [AppController],
