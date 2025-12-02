@@ -1,18 +1,19 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  Patch, 
-  Param, 
-  Delete, 
-  ParseIntPipe
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/requests/create-order.dto';
 import { UpdateOrderDto } from './dto/requests/update-order.dto';
 import { OrderResponseDto } from './dto/responses/order-response.dto';
 import { OrderStatus } from './entities/order.entity';
+import { OrderStatsDto } from './dto/responses/order-stats.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -26,6 +27,12 @@ export class OrdersController {
   @Get()
   async findAll(): Promise<OrderResponseDto[]> {
     return this.ordersService.findAll();
+  }
+
+  // Tổng hợp thống kê đơn hàng cho dashboard (bao gồm phân bố trạng thái)
+  @Get('stats')
+  async getOrderStats(): Promise<OrderStatsDto> {
+    return this.ordersService.getOrderStats();
   }
 
   @Get('status/:status')

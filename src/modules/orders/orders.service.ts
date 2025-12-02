@@ -14,6 +14,7 @@ import { UpdateOrderDto } from './dto/requests/update-order.dto';
 import { OrderResponseDto } from './dto/responses/order-response.dto';
 import { OrderItemResponseDto } from './dto/responses/order-item-response.dto';
 import { Accessory } from '../accessories/entities/accessory.entity';
+import { OrderStatsDto } from './dto/responses/order-stats.dto';
 
 @Injectable()
 export class OrdersService {
@@ -195,6 +196,46 @@ export class OrdersService {
     if (!order) throw new NotFoundException(`Order ${id} not found`);
 
     await this.orderRepository.remove(order);
+  }
+
+  /**
+   * Tổng hợp thống kê đơn hàng cho dashboard
+   * - totalOrders: tổng số đơn
+   * - totalRevenue: tổng doanh thu
+   * - averageOrderValue: giá trị trung bình mỗi đơn
+   * - statusDistribution: phân bố đơn theo trạng thái
+   * - timeframe: mô tả khoảng thời gian (tạm thời là 'all')
+   */
+  async getOrderStats(): Promise<OrderStatsDto> {
+    // Tổng số đơn
+    const totalOrders = await this.orderRepository.count();
+
+    // Tổng doanh thu
+    const revenueRaw = await this.orderRepository
+      .createQueryBuilder('o')
+      .select('COALESCE(SUM(CAST(o.totalAmount AS DECIMAL)), 0)', 'sum')
+      .getRawOne();
+    const totalRevenue = parseFloat(revenueRaw?.sum || '0');
+
+    // Phân bố trạng thái đơn hàng (dựa trên enum OrderStatus trong entity)
+    const statusDistribution = {} as Record<OrderStatus, number>;
+    const statuses = Object.values(OrderStatus);
+
+    for (const status of statuses) {
+      const count = await this.orderRepository.count({ where: { status } });
+      statusDistribution[status as OrderStatus] = count;
+    }
+
+    const averageOrderValue =
+      totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    return {
+      totalOrders,
+      totalRevenue,
+      averageOrderValue: Number(averageOrderValue.toFixed(2)),
+      statusDistribution,
+      timeframe: 'all',
+    };
   }
 
   // GET RECENT ORDERS FOR ACTIVITIES
