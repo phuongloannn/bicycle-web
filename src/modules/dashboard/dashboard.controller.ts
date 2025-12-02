@@ -15,14 +15,14 @@ export class DashboardController {
 
   @Get('sales-chart')
   async getSalesChart(
-    @Query('days') days: number = 30
+    @Query('days') days: number = 30,
   ): Promise<SalesChartDto[]> {
     return this.dashboardService.getSalesChart(+days);
   }
 
   @Get('top-products')
   async getTopProducts(
-    @Query('limit') limit: number = 5
+    @Query('limit') limit: number = 5,
   ): Promise<TopProductDto[]> {
     return this.dashboardService.getTopProducts(+limit);
   }
