@@ -15,6 +15,7 @@ import { CartModule } from './modules/cart/cart.module';
 import { CheckoutModule } from './modules/cart/checkout.module';
 import { AccessoriesModule } from './modules/accessories/accessories.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { ProductSpecificationsModule } from './modules/product-specifications/product-specifications.module';
@@ -39,7 +40,7 @@ import { ChatbotModule } from './chatbot/chatbot.module';
     PaymentModule,
     ProductSpecificationsModule,
     ChatbotModule,
-
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
