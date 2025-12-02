@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
@@ -15,4 +15,9 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsString()
   thumbnail?: string;
+
+  // Cho phép bật/tắt trạng thái danh mục từ FE
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
 }
