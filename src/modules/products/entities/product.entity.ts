@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
 
 @Entity('products')
 export class Product {
@@ -18,7 +19,11 @@ export class Product {
   quantity: number;
 
   @Column()
-  category: string;
+  category: string; // Giữ lại để backward compatibility
+
+  @ManyToOne(() => Category, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'category_id' })
+  categoryRelation: Category | null;
 
   @Column({ name: 'image_url' })  // ✅ Đúng: database có image_url
   imageUrl: string;
