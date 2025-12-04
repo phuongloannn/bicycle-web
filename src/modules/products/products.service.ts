@@ -30,13 +30,15 @@ export class ProductsService {
     // Nếu chỉ có 1 từ, tìm kiếm đơn giản
     if (words.length === 1) {
       const searchQuery = `%${words[0]}%`;
-      return await this.productRepository.find({
-        where: [
-          { name: ILike(searchQuery) },        // ILike cho case-insensitive
-          { description: ILike(searchQuery) },
-          { category: ILike(searchQuery) }
-        ],
-      });
+    const products = await this.productRepository.find({
+      where: [
+        { name: ILike(searchQuery) },        // ILike cho case-insensitive
+        { description: ILike(searchQuery) },
+        { category: ILike(searchQuery) }
+      ],
+      relations: ['categoryRelation'],
+    });
+    return this.transformProducts(products);
     }
 
     // Nếu có nhiều từ, tìm kiếm kết hợp
@@ -49,9 +51,11 @@ export class ProductsService {
       { category: ILike(searchQuery) }
     ]);
 
-    return await this.productRepository.find({
+    const products = await this.productRepository.find({
       where: whereConditions,
+      relations: ['categoryRelation'],
     });
+    return this.transformProducts(products);
   }
 
   // 🔥 THÊM TÌM KIẾM NÂNG CAO (tùy chọn)
@@ -63,7 +67,8 @@ export class ProductsService {
   }): Promise<Product[]> {
     const { query, category, minPrice, maxPrice } = searchParams;
     
-    const qb = this.productRepository.createQueryBuilder('product');
+    const qb = this.productRepository.createQueryBuilder('product')
+      .leftJoinAndSelect('product.categoryRelation', 'category');
     
     if (query) {
       qb.andWhere('(product.name ILIKE :query OR product.description ILIKE :query)', {
@@ -72,7 +77,7 @@ export class ProductsService {
     }
     
     if (category) {
-      qb.andWhere('product.category ILIKE :category', {
+      qb.andWhere('(product.category ILIKE :category OR category.name ILIKE :category)', {
         category: `%${category}%`
       });
     }
@@ -85,7 +90,8 @@ export class ProductsService {
       qb.andWhere('product.price <= :maxPrice', { maxPrice });
     }
     
-    return await qb.getMany();
+    const products = await qb.getMany();
+    return this.transformProducts(products);
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -93,18 +99,35 @@ export class ProductsService {
     return await this.productRepository.save(product);
   }
 
+  private transformProduct(product: Product): Product {
+    // Map categoryRelation.name vào category field nếu có
+    if (product.categoryRelation && !product.category) {
+      product.category = product.categoryRelation.name;
+    }
+    return product;
+  }
+
+  private transformProducts(products: Product[]): Product[] {
+    return products.map(p => this.transformProduct(p));
+  }
+
   async findAll(): Promise<Product[]> {
-    return await this.productRepository.find({
+    const products = await this.productRepository.find({
+      relations: ['categoryRelation'],
       order: { id: 'ASC' } // 🔥 THÊM SẮP XẾP MẶC ĐỊNH
     });
+    return this.transformProducts(products);
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
+    const product = await this.productRepository.findOne({ 
+      where: { id },
+      relations: ['categoryRelation']
+    });
     if (!product) {
       throw new NotFoundException(`Product #${id} not found`);
     }
-    return product;
+    return this.transformProduct(product);
   }
 
   // 🔥 TỐI ƯU UPDATE - chỉ update các field được gửi lên

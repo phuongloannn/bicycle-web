@@ -1,15 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Product } from '../products/entities/product.entity';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private categoryRepo: Repository<Category>,
+    @InjectRepository(Product)
+    private productRepo: Repository<Product>,
   ) {}
 
   private slugify(text: string): string {
@@ -70,6 +73,19 @@ export class CategoriesService {
 
   async remove(id: number) {
     const category = await this.findOne(id);
+    
+    // Kiểm tra xem category có sản phẩm nào không (query trực tiếp bằng category_id)
+    const productCount = await this.productRepo
+      .createQueryBuilder('product')
+      .where('product.category_id = :categoryId', { categoryId: id })
+      .getCount();
+    
+    if (productCount > 0) {
+      throw new BadRequestException(
+        `Cannot delete category. There are ${productCount} product(s) associated with this category. Please remove or reassign products first.`
+      );
+    }
+    
     await this.categoryRepo.remove(category);
     return { message: 'Category deleted successfully' };
   }
