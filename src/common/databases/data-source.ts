@@ -12,7 +12,7 @@ export default new DataSource({
   port: configService.get('DB_PORT') || 3306,
   username: configService.get('DB_USERNAME') || 'root',
   password: configService.get('DB_PASSWORD') || '',
-  database: configService.get('DB_NAME') || 'sms_api',
+  database: configService.get('DB_NAME') || 'sms_demo',
   entities: ['src/**/*.entity{.ts,.js}'],
   migrations: ['src/migrations/*{.ts,.js}'],
   synchronize: false,
