@@ -8,6 +8,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
 import { UploadService } from './upload.service';
 import type { Request } from 'express';
 
@@ -15,7 +16,10 @@ import type { Request } from 'express';
 export class UploadController {
   private readonly logger = new Logger(UploadController.name);
 
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(
+    private readonly uploadService: UploadService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('product-image')
   @UseInterceptors(FileInterceptor('image'))
@@ -63,12 +67,13 @@ export class UploadController {
       filename: file.filename
     });
 
+    const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:3000';
     const result = {
       filename: file.filename,
       originalName: file.originalname,
       size: file.size,
       path: `/uploads/products/${file.filename}`,
-      url: `${process.env.APP_URL || 'http://localhost:3000'}/uploads/products/${file.filename}`,
+      url: `${appUrl}/uploads/products/${file.filename}`,
     };
 
     this.logger.log('🎉 UPLOAD SUCCESS:', result);
@@ -103,11 +108,12 @@ export class UploadController {
     });
 
     // 🔥 QUAN TRỌNG: Dùng file.filename thực tế từ multer
+    const appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:3000';
     const result = {
       filename: file.filename, // 🔥 DÙNG FILENAME THỰC TẾ
       originalName: file.originalname,
       size: file.size,
-      url: `${process.env.APP_URL || 'http://localhost:3000'}/uploads/products/${file.filename}`, // 🔥 DÙNG FILENAME THỰC TẾ
+      url: `${appUrl}/uploads/products/${file.filename}`, // 🔥 DÙNG FILENAME THỰC TẾ
     };
 
     this.logger.log('🎉 ACCESSORY UPLOAD SUCCESS:', result);
