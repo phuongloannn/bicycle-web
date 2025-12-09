@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 02, 2025 at 12:10 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Dec 09, 2025 at 05:04 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sms_api`
+-- Database: `sms_demo`
 --
 
 -- --------------------------------------------------------
@@ -99,9 +99,9 @@ INSERT INTO `bike_accessories` (`id`, `name`, `description`, `price`, `category`
 (1, 'Mũ bả hiểm thể thao', 'Mũ bả hiểm nhẹ, thông thoáng cho đạp xe thể thao', 450000.00, 'Dụng cụ', '[1,3,4,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763996986824-404096043.jpg', 'accessory-1763996986824-404096043.jpg', '2025-11-16 16:19:33', '2025-12-02 09:41:37', 5),
 (2, 'Bộ dụng cụ sửa xe đa năng', 'Bộ dụng cụ 15 trong 1 cho bảo dưỡng xe đạp', 280000.00, 'Dụng cụ', '[1,2,3,4,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997031846-710028464.jpg', 'accessory-1763997031846-710028464.jpg', '2025-11-16 16:19:33', '2025-12-02 09:41:37', 5),
 (3, 'Bình nước thể thao', 'Bình nước 750ml, chống tràn', 120000.00, 'Phụ kiện', '[1,2,3,4,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997006840-548707847.jpg', 'accessory-1763997006840-548707847.jpg', '2025-11-16 16:19:33', '2025-12-02 09:41:37', 6),
-(4, 'Đèn xe đạp LED', 'Đèn chiếu sáng phía trước và sau', 350000.00, 'An toàn', '[1,3,4,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997081977-733034047.jpg', 'accessory-1763997081977-733034047.jpg', '2025-11-16 16:19:33', '2025-12-02 09:41:37', 7),
-(5, 'Cảm Biến Tốc Độ IGPSPORT SPD70', 'THÔNG SỐ KỸ THUẬT CẢM BIẾN TỐC ĐỘ IGPSPORT SPD70:\nBộ cảm biến: Độ nhạy cao\nChống rơi & Chống sốc: 1.5m\nTrọng lượng sản phẩm: 7,8g (có pin)\nKích thước sản phẩm: 36*34*7,7mm\nCấp độ chống nước: IPX7\nTuổi thọ pin: Lên đến 300 giờ\nTruyền dữ liệu: Bluetooth 5.0+ANT+\nThiết bị được hỗ trợ: Android 6.0 trở lên\nĐóng gói: SPD70*1, Vỏ bảo vệ silicon*1, Pin CR2025*1, Hướng dẫn sử dụng*1', 390000.00, 'Bảo hộ', '[1,2,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763996972995-885588235.jpg', 'accessory-1763996972995-885588235.jpg', '2025-11-24 09:38:13', '2025-12-02 09:41:37', 8),
-(6, 'Mắt Kính Đạp Xe Thể Thao ACTIVE XQ36A - Revo Cycling Sunglasses', 'Mắt Kính Đạp Xe Thể Thao ACTIVE XQ36A - Revo Cycling Sunglasses.\nMắt kính đạp xe thể thao ACTIVE XQ36A là lựa chọn lý tưởng cho những ai yêu thích sự thoải mái và bảo vệ mắt tối đa khi tham gia các hoạt động ngoài trời. Với thiết kế năng động và tính năng vượt trội, sản phẩm không chỉ giúp bạn bảo vệ mắt khỏi ánh sáng mặt trời mà còn mang đến trải nghiệm rõ nét, bảo vệ mắt toàn diện trong suốt hành trình đạp xe.\n\n\n\nCông nghệ Revo – Hiệu Suất Tối Ưu\n\nMắt kính ACTIVE XQ36A sử dụng công nghệ Revo tiên tiến, mang đến khả năng chống chói và giảm phản xạ ánh sáng cực kỳ hiệu quả. Các lớp tráng Revo trên bề mặt kính giúp tăng cường độ tương phản và độ sáng, cho phép bạn quan sát rõ ràng hơn ngay cả trong điều kiện ánh sáng...', 990000.00, 'Mắt kính ', '[1,2,3,4,5]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997019690-292608933.jpg', 'accessory-1763997019690-292608933.jpg', '2025-11-24 12:45:51', '2025-12-02 09:41:37', 9),
+(4, 'Đèn xe đạp LED', 'Đèn chiếu sáng phía trước và sau', 350000.00, 'An toàn', '[1,3,4,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997081977-733034047.jpg', 'accessory-1763997081977-733034047.jpg', '2025-11-16 16:19:33', '2025-12-02 09:41:37', NULL),
+(5, 'Cảm Biến Tốc Độ IGPSPORT SPD70', 'THÔNG SỐ KỸ THUẬT CẢM BIẾN TỐC ĐỘ IGPSPORT SPD70:\nBộ cảm biến: Độ nhạy cao\nChống rơi & Chống sốc: 1.5m\nTrọng lượng sản phẩm: 7,8g (có pin)\nKích thước sản phẩm: 36*34*7,7mm\nCấp độ chống nước: IPX7\nTuổi thọ pin: Lên đến 300 giờ\nTruyền dữ liệu: Bluetooth 5.0+ANT+\nThiết bị được hỗ trợ: Android 6.0 trở lên\nĐóng gói: SPD70*1, Vỏ bảo vệ silicon*1, Pin CR2025*1, Hướng dẫn sử dụng*1', 390000.00, 'Bảo hộ', '[1,2,5,6]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763996972995-885588235.jpg', 'accessory-1763996972995-885588235.jpg', '2025-11-24 09:38:13', '2025-12-02 09:41:37', NULL),
+(6, 'Mắt Kính Đạp Xe Thể Thao ACTIVE XQ36A - Revo Cycling Sunglasses', 'Mắt Kính Đạp Xe Thể Thao ACTIVE XQ36A - Revo Cycling Sunglasses.\nMắt kính đạp xe thể thao ACTIVE XQ36A là lựa chọn lý tưởng cho những ai yêu thích sự thoải mái và bảo vệ mắt tối đa khi tham gia các hoạt động ngoài trời. Với thiết kế năng động và tính năng vượt trội, sản phẩm không chỉ giúp bạn bảo vệ mắt khỏi ánh sáng mặt trời mà còn mang đến trải nghiệm rõ nét, bảo vệ mắt toàn diện trong suốt hành trình đạp xe.\n\n\n\nCông nghệ Revo – Hiệu Suất Tối Ưu\n\nMắt kính ACTIVE XQ36A sử dụng công nghệ Revo tiên tiến, mang đến khả năng chống chói và giảm phản xạ ánh sáng cực kỳ hiệu quả. Các lớp tráng Revo trên bề mặt kính giúp tăng cường độ tương phản và độ sáng, cho phép bạn quan sát rõ ràng hơn ngay cả trong điều kiện ánh sáng...', 990000.00, 'Mắt kính ', '[1,2,3,4,5]', 10, 'http://localhost:3000/uploads/accessories/accessory-1763997019690-292608933.jpg', 'accessory-1763997019690-292608933.jpg', '2025-11-24 12:45:51', '2025-12-02 09:41:37', NULL),
 (7, 'Còi xe', NULL, 100000.00, 'Dụng cụ', '[2,5]', 9, 'http://localhost:3000/uploads/accessories/accessory-1763993387238-485469290.jpg', NULL, '2025-11-24 14:02:41', '2025-12-02 09:41:37', 5),
 (8, 'Chuông xe mini', NULL, 90000.00, 'Dụng cụ', '[1]', 9, 'http://localhost:3000/uploads/accessories/accessory-1764256898898-707747327.jpg', 'accessory-1764256898898-707747327.jpg', '2025-11-24 14:10:37', '2025-12-02 09:41:37', 5),
 (9, 'Chắn bùn 2 sọc lưng', NULL, 30000.00, 'Dụng cụ', '[1,3]', 7, 'http://localhost:3000/uploads/accessories/accessory-1764262719153-484996552.jpg', 'accessory-1764262719153-484996552.jpg', '2025-11-27 16:58:50', '2025-12-02 09:41:37', 5);
@@ -157,10 +157,7 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `parent_id`, `thumbnail`, `is_ac
 (3, 'Xe đạp tuaring', 'xe-đạp-tuaring', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
 (4, 'Xe đạp đua', 'xe-đạp-đua', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
 (5, 'Dụng cụ', 'dụng-cụ', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
-(6, 'Phụ kiện', 'phụ-kiện', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
-(7, 'An toàn', 'an-toàn', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
-(8, 'Bảo hộ', 'bảo-hộ', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37'),
-(9, 'Mắt kính', 'mắt-kính', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37');
+(6, 'Phụ kiện', 'phụ-kiện', NULL, NULL, 1, '2025-12-02 16:41:37', '2025-12-02 16:41:37');
 
 -- --------------------------------------------------------
 
@@ -216,7 +213,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `name`, `email`, `is_guest`, `temporary_token`, `guest_expires_at`, `phone`, `address`, `created_at`, `updated_at`) VALUES
-(1, 'Mai Lê Phương Loan', 'admin@gmail.com', 0, NULL, NULL, '0099888877', 'VNUIS VNU', '2025-10-30 01:54:17', '2025-11-28 23:16:47'),
+(1, 'Mai Lê Phương Loan', 'admin@gmail.com', 0, NULL, NULL, '', 'VNUIS VNU', '2025-10-30 01:54:17', '2025-12-07 21:49:03'),
 (4, 'Nguyễn Duy Đức', 'ducduy@gmail.com', 0, NULL, NULL, '02929229', 'VNUIS', '2025-10-30 02:03:13', '2025-11-03 19:44:02'),
 (5, 'Lê Thị Xuân Hào', 'hao@gmail.com', 0, NULL, NULL, '39393883', 'ha nội', '2025-10-30 02:05:57', '2025-11-28 01:16:30'),
 (9, 'Đoàn Thị Hồng Ngọc', 'ngocdoan@gmail.com', 0, NULL, NULL, '92943829', 'VNU IS', '2025-10-30 11:51:21', '2025-10-30 11:51:21'),
@@ -240,6 +237,35 @@ INSERT INTO `customers` (`id`, `name`, `email`, `is_guest`, `temporary_token`, `
 (31, 'Mai Lê Phương Loan', 'loaniu@gmail.com', 0, NULL, NULL, '0999009', 'VNU IS', '2025-11-28 10:23:34', '2025-11-29 00:17:27'),
 (32, 'Quang', 'quanghc@gmail.com', 0, NULL, NULL, '012345671', 'ABC', '2025-11-28 11:02:07', '2025-11-28 11:02:07'),
 (33, 'Hoàng Chi', 'chi@gmail.com', 0, NULL, NULL, '039299292', 'VNU IS', '2025-11-29 12:53:30', '2025-11-29 12:53:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory`
+--
+
+CREATE TABLE `inventory` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 0,
+  `reserved` int(11) NOT NULL DEFAULT 0,
+  `min_stock` int(11) NOT NULL DEFAULT 0,
+  `location` varchar(100) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`id`, `product_id`, `category_id`, `quantity`, `reserved`, `min_stock`, `location`, `created_at`, `updated_at`) VALUES
+(2, 3, 2, 46, 2, 1, 'Me tri street', '2025-12-02 21:14:48', '2025-12-02 21:14:55'),
+(3, 1, 2, 45, 12, 1, 'Cau giay', '2025-12-02 21:19:14', '2025-12-02 21:19:14'),
+(4, 2, 1, 500, 0, 1, 'Test amount', '2025-12-04 23:34:35', '2025-12-04 23:34:35'),
+(5, 4, 4, 333, 0, 1, 'Khương thuong', '2025-12-04 23:35:18', '2025-12-04 23:35:18'),
+(6, 4, 4, 23, 0, 0, 'Khương Hạ', '2025-12-04 23:35:52', '2025-12-04 23:35:52');
 
 -- --------------------------------------------------------
 
@@ -533,28 +559,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `sku`, `brand`, `model_year`, `color_options`, `price`, `stock`, `category`, `bike_type`, `attributes`, `image_url`, `createdAt`, `updatedAt`, `quantity`, `category_id`) VALUES
-(1, 'Xe đạp địa hình thể thao Maruishi ASO', 'Với xu hướng phát triển bận rộn như ngày nay, mọi người thường làm việc văn phòng công sở không có thời gian hoạt động, để nâng cao sức khỏe và để phòng tránh được những bệnh tật. Bộ môn đạp xe đạp rất được nhiều người quan tâm nhất là ở các thành phố lớn, đạp xe đạp nâng cao sức khỏe và có rất nhiều tác dụng tốt cho cơ thể, thứ nhất là bộ môn bơi lội, thứ nhì là đạp xe đạp.\n\n', NULL, 'Maruishi', '2025', '[\"Đen\", \"Xanh\", \"Đỏ\"]', 6550000.00, 0, 'Xe đạp địa hình', 'Mountain Bike', NULL, 'http://localhost:3000/uploads/products/product-1763977152038-95658893.jpg', '2025-10-30 10:49:59', '2025-12-02 16:41:37', 151, 1),
-(2, 'Xe đạp trẻ em NISHIKI ANNA 20', 'Ngay lần đầu nhìn thấy xe đạp trẻ em NISHIKI ANNA 20, các bé và phụ huynh sẽ rất ấn tượng với thiết kế thời trang thể thao với 3 phối màu hiện đại cùng kích cỡ bánh 20 inch. Đây sẽ là lựa chọn tuyệt vời dành cho các bé trong giai đoạn phát triển và tập đi xe.\n', NULL, 'NISHIKI', '2025', '[\"Hồng\", \"Xanh\", \"Trắng\"]', 3999000.00, 0, 'Xe đạp trẻ em', 'Kids Bike', NULL, 'http://localhost:3000/uploads/products/product-1762160785813-40438951.jpg', '2025-10-31 08:36:35', '2025-12-02 16:41:37', 883, 2),
-(3, 'Xe đạp touring Maruishi Half Miler', 'Bạn đang cần tìm một chiếc xe nhẹ nhàng, thanh lịch, êm ái nhưng vẫn ổn định trên mọi cung đường, Mẫu xe Maruishi Half Miler đến từ Nhật Bản sẽ là chiếc xe khiến bạn hài lòng ngay từ cái nhìn đầu tiên. Xe đạp touring Maruishi Half Miler là chiếc xe đạp thành phố, với kiểu dáng trang nhã, màu sắc khỏe khoắn, phù hợp cho nhiều đối tượng sử dụng, từ thanh niên đến trung niên. Với nhiều mục đích sử dụng, từ đi làm, đi tập thể dục, đi chơi, đi phượt….\n', NULL, 'Maruishi', '2025', '[\"Xám\", \"Đen\"]', 3333000.00, 0, 'Xe đạp tuaring', 'Touring Bike', NULL, 'http://localhost:3000/uploads/products/product-1762160816726-403420681.jpg', '2025-10-31 08:41:46', '2025-12-02 16:41:37', 7, 3),
-(4, 'Xe đạp đua RIKULAU CADENCE', 'Xe đạp đua RIKULAU CADENCE mang trong mình kiểu dáng thể thao với thiết kế hiện đại, thời thượng, phù hợp với những hoạt động ngoài trời nhằm mục đích rèn luyện sức khỏe hay chinh phục những cung đường đầy thử thách.', NULL, 'RIKULAU', '2025', '[\"Đỏ\", \"Đen\", \"Trắng\"]', 2999000.00, 0, 'Xe đạp đua', 'Road Bike', NULL, 'http://localhost:3000/uploads/products/product-1762109283481-50811960.jpg', '2025-11-03 01:48:14', '2025-12-02 16:41:37', 11, 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inventory`
---
-
-CREATE TABLE `inventory` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 0,
-  `reserved` int(11) NOT NULL DEFAULT 0,
-  `min_stock` int(11) NOT NULL DEFAULT 0,
-  `location` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(1, 'Xe đạp địa hình thể thao Maruishi ASO', 'Với xu hướng phát triển bận rộn như ngày nay, mọi người thường làm việc văn phòng công sở không có thời gian hoạt động, để nâng cao sức khỏe và để phòng tránh được những bệnh tật. Bộ môn đạp xe đạp rất được nhiều người quan tâm nhất là ở các thành phố lớn, đạp xe đạp nâng cao sức khỏe và có rất nhiều tác dụng tốt cho cơ thể, thứ nhất là bộ môn bơi lội, thứ nhì là đạp xe đạp.\n\n', NULL, 'Maruishi', '2025', '[\"Đen\", \"Xanh\", \"Đỏ\"]', 6550000.00, 0, 'Xe đạp địa hình', 'Mountain Bike', NULL, 'http://localhost:3000/uploads/products/product-1763977152038-95658893.jpg', '2025-10-30 10:49:59', '2025-12-04 23:33:33', 33, 1),
+(2, 'Xe đạp trẻ em NISHIKI ANNA 20', 'Ngay lần đầu nhìn thấy xe đạp trẻ em NISHIKI ANNA 20, các bé và phụ huynh sẽ rất ấn tượng với thiết kế thời trang thể thao với 3 phối màu hiện đại cùng kích cỡ bánh 20 inch. Đây sẽ là lựa chọn tuyệt vời dành cho các bé trong giai đoạn phát triển và tập đi xe.\n', NULL, 'NISHIKI', '2025', '[\"Hồng\", \"Xanh\", \"Trắng\"]', 3999000.00, 0, 'Xe đạp trẻ em', 'Kids Bike', NULL, 'http://localhost:3000/uploads/products/product-1762160785813-40438951.jpg', '2025-10-31 08:36:35', '2025-12-04 23:34:35', 500, 2),
+(3, 'Xe đạp touring Maruishi Half Miler', 'Bạn đang cần tìm một chiếc xe nhẹ nhàng, thanh lịch, êm ái nhưng vẫn ổn định trên mọi cung đường, Mẫu xe Maruishi Half Miler đến từ Nhật Bản sẽ là chiếc xe khiến bạn hài lòng ngay từ cái nhìn đầu tiên. Xe đạp touring Maruishi Half Miler là chiếc xe đạp thành phố, với kiểu dáng trang nhã, màu sắc khỏe khoắn, phù hợp cho nhiều đối tượng sử dụng, từ thanh niên đến trung niên. Với nhiều mục đích sử dụng, từ đi làm, đi tập thể dục, đi chơi, đi phượt….\n', NULL, 'Maruishi', '2025', '[\"Xám\", \"Đen\"]', 3333000.00, 0, 'Xe đạp tuaring', 'Touring Bike', NULL, 'http://localhost:3000/uploads/products/product-1762160816726-403420681.jpg', '2025-10-31 08:41:46', '2025-12-04 23:33:07', 44, 3),
+(4, 'Xe đạp đua RIKULAU CADENCE', 'Xe đạp đua RIKULAU CADENCE mang trong mình kiểu dáng thể thao với thiết kế hiện đại, thời thượng, phù hợp với những hoạt động ngoài trời nhằm mục đích rèn luyện sức khỏe hay chinh phục những cung đường đầy thử thách.', NULL, 'RIKULAU', '2025', '[\"Đỏ\", \"Đen\", \"Trắng\"]', 2999000.00, 0, 'Xe đạp đua', 'Road Bike', NULL, 'http://localhost:3000/uploads/products/product-1762109283481-50811960.jpg', '2025-11-03 01:48:14', '2025-12-04 23:35:52', 356, 4);
 
 -- --------------------------------------------------------
 
@@ -735,6 +743,14 @@ ALTER TABLE `customers`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_inventory_product` (`product_id`),
+  ADD KEY `idx_inventory_category` (`category_id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -772,14 +788,6 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `sku` (`sku`),
   ADD KEY `idx_products_category_id` (`category_id`);
-
---
--- Indexes for table `inventory`
---
-ALTER TABLE `inventory`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_inventory_product` (`product_id`),
-  ADD KEY `idx_inventory_category` (`category_id`);
 
 --
 -- Indexes for table `products_new`
@@ -869,6 +877,12 @@ ALTER TABLE `customers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
+-- AUTO_INCREMENT for table `inventory`
+--
+ALTER TABLE `inventory`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
@@ -897,12 +911,6 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `inventory`
---
-ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products_new`
@@ -958,6 +966,13 @@ ALTER TABLE `carts`
   ADD CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD CONSTRAINT `fk_inventory_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_inventory_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
@@ -976,13 +991,6 @@ ALTER TABLE `order_details`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Constraints for table `inventory`
---
-ALTER TABLE `inventory`
-  ADD CONSTRAINT `fk_inventory_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_inventory_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `product_categories`
