@@ -19,7 +19,13 @@ SET time_zone = "+00:00";
 
 --
 -- Database: `sms_demo`
+-- Create database if not exists
 --
+CREATE DATABASE IF NOT EXISTS `sms_demo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `sms_demo`;
+
+-- Disable foreign key checks temporarily to allow data insertion
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------------
 
@@ -673,7 +679,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `password`, `role`, `email`, `name`, `createdAt`, `updatedAt`) VALUES
-(1, '$2b$10$55dpwgw1hozyT/109.Z6Z.tFYrXukg/6BoTLelM.AIC0RZh5g5I2G', '', 'admin@gmail.com', 'Administrator', '2025-10-29 20:26:00', '2025-10-29 20:26:00'),
+(1, '$2b$10$55dpwgw1hozyT/109.Z6Z.tFYrXukg/6BoTLelM.AIC0RZh5g5I2G', 'Admin', 'admin@gmail.com', 'Administrator', '2025-10-29 20:26:00', '2025-10-29 20:26:00'),
 (3, '$2b$10$MGay2yItqnBV1WYouKccc.5YIG54ijhtNuZRBqWKQug9I/rZDz8mu', 'Admin', 'admin@example.com', 'Admin User', '2025-10-30 00:50:11', '2025-10-30 00:50:11'),
 (4, '$2b$10$odxtykh2m1y2PXU889npLO3P6iocPFv28GMgXVTasaWqt8I/tPe/W', 'Admin', 'admin@123gmail.com', 'Admin User', '2025-10-30 00:54:11', '2025-10-30 00:54:11'),
 (5, '$2b$10$1aVldWSJpddevA0QP/I8n.rBYp86hrrkd6jxjM23uOvV0mdwHOUxm', 'User', 'loaniu@example.com', 'Mai Lê Phương Loan', '2025-10-30 01:12:37', '2025-10-30 01:12:37'),
@@ -681,7 +687,8 @@ INSERT INTO `users` (`id`, `password`, `role`, `email`, `name`, `createdAt`, `up
 (7, '$2b$10$Mz1TEwD.SlQKnbhkkNETouBqfVUtDf2iEdaUSluRmUB2/AkniOc8K', 'User', 'test@example.com', 'Test User', '2025-10-30 02:33:20', '2025-10-30 02:33:20');
 
 --
--- Indexes for dumped tables
+-- All data has been inserted
+-- Now create indexes and constraints
 --
 
 --
@@ -1010,6 +1017,9 @@ ALTER TABLE `product_specifications`
 --
 ALTER TABLE `test_ride_schedules`
   ADD CONSTRAINT `test_ride_schedules_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
